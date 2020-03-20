@@ -2,9 +2,12 @@ import React from "react";
 
 const Statistic = ({ text, value }) => {
   return (
-    <p>
-      {text} {value} {text === "positive:" ? "%" : ""}
-    </p>
+    <tr>
+      <td>{text}</td>
+      <td>
+        {value} {text === "positive:" ? "%" : ""}
+      </td>
+    </tr>
   );
 };
 

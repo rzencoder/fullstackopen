@@ -8,12 +8,16 @@ const Statistics = ({ good, bad, neutral }) => {
   return (
     <div>
       <h2>Statistics</h2>
-      <Statistic text="good:" value={good}></Statistic>
-      <Statistic text="bad:" value={bad}></Statistic>
-      <Statistic text="neutral:" value={neutral}></Statistic>
-      <Statistic text="all:" value={all}></Statistic>
-      <Statistic text="average:" value={average}></Statistic>
-      <Statistic text="positive:" value={positive}></Statistic>
+      <table>
+        <tbody>
+          <Statistic text="good:" value={good}></Statistic>
+          <Statistic text="bad:" value={bad}></Statistic>
+          <Statistic text="neutral:" value={neutral}></Statistic>
+          <Statistic text="all:" value={all}></Statistic>
+          <Statistic text="average:" value={average}></Statistic>
+          <Statistic text="positive:" value={positive}></Statistic>
+        </tbody>
+      </table>
     </div>
   );
 };
