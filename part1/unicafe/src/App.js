@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Statistics from "./Statistics";
+import Button from "./Button";
 
 const App = () => {
   const [good, setGood] = useState(0);
@@ -13,12 +14,12 @@ const App = () => {
   return (
     <div>
       <h2>Give Feedback</h2>
-      <button onClick={handleGood}>good</button>
-      <button onClick={handleNeutral}>neutral</button>
-      <button onClick={handleBad}>bad</button>
-      {good ||
-        bad ||
-        (neutral && <Statistics good={good} bad={bad} neutral={neutral} />)}
+      <Button handleClick={handleGood} text="good" />
+      <Button handleClick={handleNeutral} text="neutral" />
+      <Button handleClick={handleBad} text="bad" />
+      {(good || bad || neutral) && (
+        <Statistics good={good} bad={bad} neutral={neutral} />
+      )}
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React from "react";
+import Statistic from "./Statistic";
 
 const Statistics = ({ good, bad, neutral }) => {
   const all = good + bad + neutral;
@@ -7,12 +8,12 @@ const Statistics = ({ good, bad, neutral }) => {
   return (
     <div>
       <h2>Statistics</h2>
-      <p>good: {good}</p>
-      <p>bad: {bad}</p>
-      <p>neutral: {neutral}</p>
-      <p>all: {all}</p>
-      <p>average: {average}</p>
-      <p>positive: {positive}%</p>
+      <Statistic text="good:" value={good}></Statistic>
+      <Statistic text="bad:" value={bad}></Statistic>
+      <Statistic text="neutral:" value={neutral}></Statistic>
+      <Statistic text="all:" value={all}></Statistic>
+      <Statistic text="average:" value={average}></Statistic>
+      <Statistic text="positive:" value={positive}></Statistic>
     </div>
   );
 };
