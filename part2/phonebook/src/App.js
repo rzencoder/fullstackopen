@@ -6,7 +6,10 @@ const App = () => {
 
   const handleOnSubmit = e => {
     e.preventDefault();
-    setPersons(persons.concat({ name: newName }));
+    const duplicateName = persons.filter(person => person.name === newName);
+    duplicateName.length
+      ? alert(`${newName} is already added to the phonebook`)
+      : setPersons(persons.concat({ name: newName }));
   };
 
   const handleNameChange = e => {
