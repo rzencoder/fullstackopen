@@ -3,6 +3,7 @@ import axios from "axios";
 import Search from "./Search";
 import DisplayPersons from "./DisplayPersons";
 import AddPerson from "./AddPerson";
+import { addPerson, getPhonebook } from "./services/numberService";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -11,9 +12,7 @@ const App = () => {
   const [newSearch, setNewSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then(res => {
-      setPersons(res.data);
-    });
+    getPhonebook().then(res => setPersons(res));
   }, []);
 
   const handleOnSubmit = e => {
@@ -21,14 +20,9 @@ const App = () => {
     const duplicateName = persons.filter(person => person.name === newName);
     duplicateName.length
       ? alert(`${newName} is already added to the phonebook`)
-      : axios
-          .post("http://localhost:3001/persons", {
-            name: newName,
-            number: newNumber
-          })
-          .then(res => {
-            setPersons(persons.concat(res.data));
-          });
+      : addPerson(newName, newNumber).then(data =>
+          setPersons(persons.concat(data))
+        );
   };
 
   const handleNameChange = e => {
