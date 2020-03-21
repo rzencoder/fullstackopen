@@ -6,7 +6,8 @@ import AddPerson from "./AddPerson";
 import {
   addPerson,
   getPhonebook,
-  deletePerson
+  deletePerson,
+  replaceNumber
 } from "./services/numberService";
 
 const App = () => {
@@ -23,10 +24,20 @@ const App = () => {
     e.preventDefault();
     const duplicateName = persons.filter(person => person.name === newName);
     duplicateName.length
-      ? alert(`${newName} is already added to the phonebook`)
-      : addPerson(newName, newNumber).then(data =>
+      ? window.confirm(
+          `${newName} is already added to the phonebook. Replace the old number with a new one?`
+        ) && handleNumberReplacement(duplicateName[0])
+      : addPerson({ name: newName, number: newNumber }).then(data =>
           setPersons(persons.concat(data))
         );
+  };
+
+  const handleNumberReplacement = person => {
+    const data = { ...person, number: newNumber };
+    replaceNumber(person.id, data).then(res => {
+      const filteredPersons = persons.filter(val => val.name !== res.name);
+      setPersons([...filteredPersons, res]);
+    });
   };
 
   const handleNameChange = e => {
