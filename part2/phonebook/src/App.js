@@ -21,7 +21,14 @@ const App = () => {
     const duplicateName = persons.filter(person => person.name === newName);
     duplicateName.length
       ? alert(`${newName} is already added to the phonebook`)
-      : setPersons(persons.concat({ name: newName, number: newNumber }));
+      : axios
+          .post("http://localhost:3001/persons", {
+            name: newName,
+            number: newNumber
+          })
+          .then(res => {
+            setPersons(persons.concat(res.data));
+          });
   };
 
   const handleNameChange = e => {
