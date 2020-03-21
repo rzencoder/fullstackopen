@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import Search from "./Search";
 import DisplayPersons from "./DisplayPersons";
+import Message from "./Message";
 import AddPerson from "./AddPerson";
 import {
   addPerson,
@@ -15,10 +15,18 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [newSearch, setNewSearch] = useState("");
+  const [message, setMessage] = useState({});
 
   useEffect(() => {
     getPhonebook().then(res => setPersons(res));
   }, []);
+
+  const handleMessage = data => {
+    setMessage(data);
+    setTimeout(() => {
+      setMessage({});
+    }, 3000);
+  };
 
   const handleOnSubmit = e => {
     e.preventDefault();
@@ -27,9 +35,10 @@ const App = () => {
       ? window.confirm(
           `${newName} is already added to the phonebook. Replace the old number with a new one?`
         ) && handleNumberReplacement(duplicateName[0])
-      : addPerson({ name: newName, number: newNumber }).then(data =>
-          setPersons(persons.concat(data))
-        );
+      : addPerson({ name: newName, number: newNumber }).then(data => {
+          setPersons(persons.concat(data));
+          handleMessage({ text: `Added ${data.name}`, status: "ok" });
+        });
   };
 
   const handleNumberReplacement = person => {
@@ -37,6 +46,7 @@ const App = () => {
     replaceNumber(person.id, data).then(res => {
       const filteredPersons = persons.filter(val => val.name !== res.name);
       setPersons([...filteredPersons, res]);
+      handleMessage({ text: "Number Changed Successfully", status: "ok" });
     });
   };
 
@@ -60,6 +70,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Message message={message} />
       <Search handleSearchChange={handleSearchChange} newSearch={newSearch} />
       <AddPerson
         handleNameChange={handleNameChange}
