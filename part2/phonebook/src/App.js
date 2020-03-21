@@ -61,10 +61,17 @@ const App = () => {
   };
   const handleDelete = person => {
     window.confirm(`Delete ${person.name}?`) &&
-      deletePerson(person).then(data => {
-        const newPersons = persons.filter(val => val.name !== person.name);
-        setPersons(newPersons);
-      });
+      deletePerson(person)
+        .then(data => {
+          const newPersons = persons.filter(val => val.name !== person.name);
+          setPersons(newPersons);
+        })
+        .catch(error => {
+          handleMessage({
+            text: `${person.name} has been already been deleted from the server`,
+            status: "error"
+          });
+        });
   };
 
   return (
