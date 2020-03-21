@@ -1,23 +1,31 @@
 import React, { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "01234-230987" }
+  ]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   const handleOnSubmit = e => {
     e.preventDefault();
     const duplicateName = persons.filter(person => person.name === newName);
     duplicateName.length
       ? alert(`${newName} is already added to the phonebook`)
-      : setPersons(persons.concat({ name: newName }));
+      : setPersons(persons.concat({ name: newName, number: newNumber }));
   };
 
   const handleNameChange = e => {
     setNewName(e.target.value);
   };
+  const handleNumberChange = e => {
+    setNewNumber(e.target.value);
+  };
 
   const renderPersons = persons.map(person => (
-    <li key={person.name}>{person.name}</li>
+    <li key={person.name}>
+      {person.name} {person.number}
+    </li>
   ));
 
   return (
@@ -26,6 +34,9 @@ const App = () => {
       <form onSubmit={handleOnSubmit}>
         <div>
           name: <input onChange={handleNameChange} value={newName} />
+        </div>
+        <div>
+          number: <input onChange={handleNumberChange} value={newNumber} />
         </div>
         <div>
           <button type="submit">add</button>
