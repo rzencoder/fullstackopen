@@ -3,7 +3,11 @@ import axios from "axios";
 import Search from "./Search";
 import DisplayPersons from "./DisplayPersons";
 import AddPerson from "./AddPerson";
-import { addPerson, getPhonebook } from "./services/numberService";
+import {
+  addPerson,
+  getPhonebook,
+  deletePerson
+} from "./services/numberService";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -34,6 +38,13 @@ const App = () => {
   const handleSearchChange = e => {
     setNewSearch(e.target.value);
   };
+  const handleDelete = person => {
+    window.confirm(`Delete ${person.name}?`) &&
+      deletePerson(person).then(data => {
+        const newPersons = persons.filter(val => val.name !== person.name);
+        setPersons(newPersons);
+      });
+  };
 
   return (
     <div>
@@ -46,7 +57,11 @@ const App = () => {
         newName={newName}
         newNumber={newNumber}
       />
-      <DisplayPersons persons={persons} newSearch={newSearch} />
+      <DisplayPersons
+        persons={persons}
+        handleDelete={handleDelete}
+        newSearch={newSearch}
+      />
     </div>
   );
 };
