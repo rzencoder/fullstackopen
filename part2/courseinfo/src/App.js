@@ -48,7 +48,7 @@ const App = () => {
   ];
 
   const renderCourses = courses.map(course => (
-    <Course key={course.id} course={course} />
+    <Course course={course} key={course.id} />
   ));
 
   return <div>{renderCourses}</div>;
