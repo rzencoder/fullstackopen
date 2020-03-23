@@ -53,8 +53,16 @@ app.post("/api/persons", (req, res) => {
   const name = req.body.name;
   const number = req.body.number;
   const id = Math.floor(Math.random() * 1000000);
+  if (persons.find(person => person.name === name)) {
+    return res.status(400).json({ error: "Name already in phonebook" });
+  }
+  if (!number) {
+    return res.status(400).json({ error: "Number must be given" });
+  }
+  if (!name) {
+    return res.status(400).json({ error: "Name must be given" });
+  }
   persons.push({ name, number, id });
-  console.log(persons);
   res.send(`<p>Success</p>`);
 });
 
