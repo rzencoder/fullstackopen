@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const morgan = require("morgan");
 app.use(express.json());
+const cors = require("cors");
+
+app.use(cors());
 
 morgan.token("body", function(req, res) {
   return JSON.stringify(req.body);
@@ -70,10 +73,10 @@ app.post("/api/persons", (req, res) => {
     return res.status(400).json({ error: "Name must be given" });
   }
   persons.push({ name, number, id });
-  res.send(`<p>Success</p>`);
+  res.json({ name, number, id });
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
