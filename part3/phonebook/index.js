@@ -51,7 +51,7 @@ app.delete("/api/persons/:id", (req, res) => {
     .catch(error => res.sendStatus(204).end());
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const name = req.body.name;
   const number = req.body.number;
   const id = Math.floor(Math.random() * 1000000);
@@ -60,21 +60,15 @@ app.post("/api/persons", (req, res) => {
     number: number,
     id: id
   });
-  if (!number) {
-    return res.status(400).json({ error: "Number must be given" });
-  }
-  if (!name) {
-    return res.status(400).json({ error: "Name must be given" });
-  }
-  // if (persons.find(person => person.name === name)) {
-  //   return res.status(400).json({ error: "Name already in phonebook" });
-  // }
 
-  contact.save().then(response => {
-    console.log("contact saved!");
-    res.json(response.toJSON());
-    mongoose.connection.close();
-  });
+  contact
+    .save()
+    .then(response => {
+      console.log("contact saved!");
+      res.json(response.toJSON());
+      mongoose.connection.close();
+    })
+    .catch(error => next(error));
 });
 
 app.put("/api/persons/:id", (req, res, next) => {
@@ -97,6 +91,8 @@ const errorHandler = (error, request, response, next) => {
 
   if (error.name === "CastError" && error.kind === "ObjectId") {
     return response.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return response.status(400).json({ error: error.message });
   }
 
   next(error);

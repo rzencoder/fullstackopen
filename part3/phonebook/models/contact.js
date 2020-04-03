@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const uniqueValidator = require("mongoose-unique-validator");
 
 const url = process.env.MONGODB_URI;
 mongoose
@@ -11,8 +12,8 @@ mongoose
   });
 
 const contactSchema = new mongoose.Schema({
-  name: String,
-  number: Number
+  name: { type: String, required: true, unique: true },
+  number: { type: Number, required: true, unique: true }
 });
 
 contactSchema.set("toJSON", {
@@ -23,29 +24,6 @@ contactSchema.set("toJSON", {
   }
 });
 
-const addContact = () => {
-  const name = process.argv[3];
-  const number = process.argv[4];
-
-  const contact = new Contact({
-    name: name,
-    number: number
-  });
-
-  contact.save().then(response => {
-    console.log("contact saved!");
-    mongoose.connection.close();
-  });
-};
-
-const findContact = () => {
-  console.log("Phonebook:");
-  Contact.find({}).then(contacts => {
-    contacts.forEach(contact => {
-      console.log(`${contact.name} ${contact.number}`);
-    });
-    mongoose.connection.close();
-  });
-};
+contactSchema.plugin(uniqueValidator);
 
 module.exports = mongoose.model("Contact", contactSchema);
