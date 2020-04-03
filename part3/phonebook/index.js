@@ -29,15 +29,16 @@ app.get("/api/persons", (req, res) => {
   });
 });
 
-app.get("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  Contact.find({ id: id })
-    .then(contact => {
-      return res.json(contact);
+app.get("/api/persons/:id", (req, res, next) => {
+  Contact.findById(request.params.id)
+    .then(note => {
+      if (note) {
+        response.json(note.toJSON());
+      } else {
+        response.status(404).end();
+      }
     })
-    .catch(err => {
-      return res.sendStatus(404).end();
-    });
+    .catch(error => next(error));
 });
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -72,6 +73,18 @@ app.post("/api/persons", (req, res) => {
     mongoose.connection.close();
   });
 });
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError" && error.kind === "ObjectId") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
