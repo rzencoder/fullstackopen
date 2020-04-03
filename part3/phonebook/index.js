@@ -16,34 +16,11 @@ app.use(
 
 const Contact = require("./models/contact");
 
-let persons = [
-  {
-    name: "Arto Hellas",
-    number: "040-123456",
-    id: 1
-  },
-  {
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-    id: 2
-  },
-  {
-    name: "Dan Abramov",
-    number: "12-43-234345",
-    id: 3
-  },
-  {
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-    id: 4
-  }
-];
-
 app.get("/info", (req, res) => {
-  const message = `
-    <p>Phonebook has info for ${persons.length} people</p>
-    <p>${new Date()}</p>`;
-  res.send(message);
+  // const message = `
+  //   <p>Phonebook has info for ${persons.length} people</p>
+  //   <p>${new Date()}</p>`;
+  // res.send(message);
 });
 
 app.get("/api/persons", (req, res) => {
@@ -65,7 +42,7 @@ app.get("/api/persons/:id", (req, res) => {
 
 app.delete("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
-  persons = persons.filter(psn => psn.id === id);
+  // persons = persons.filter(psn => psn.id === id);
   res.sendStatus(204).end();
 });
 
