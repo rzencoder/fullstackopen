@@ -30,12 +30,12 @@ app.get("/api/persons", (req, res) => {
 });
 
 app.get("/api/persons/:id", (req, res, next) => {
-  Contact.findById(request.params.id)
+  Contact.findById(req.params.id)
     .then(note => {
       if (note) {
-        response.json(note.toJSON());
+        res.json(note.toJSON());
       } else {
-        response.status(404).end();
+        res.status(404).end();
       }
     })
     .catch(error => next(error));
@@ -58,20 +58,36 @@ app.post("/api/persons", (req, res) => {
     number: number,
     id: id
   });
-  if (persons.find(person => person.name === name)) {
-    return res.status(400).json({ error: "Name already in phonebook" });
-  }
   if (!number) {
     return res.status(400).json({ error: "Number must be given" });
   }
   if (!name) {
     return res.status(400).json({ error: "Name must be given" });
   }
+  // if (persons.find(person => person.name === name)) {
+  //   return res.status(400).json({ error: "Name already in phonebook" });
+  // }
+
   contact.save().then(response => {
     console.log("contact saved!");
     res.json(response.toJSON());
     mongoose.connection.close();
   });
+});
+
+app.put("/api/persons/:id", (req, res, next) => {
+  const body = req.body;
+  console.log(req.params.id);
+  const contact = {
+    name: body.name,
+    number: body.number
+  };
+
+  Contact.findByIdAndUpdate(req.params.id, contact, { new: true })
+    .then(updatedContact => {
+      res.json(updatedContact.toJSON());
+    })
+    .catch(error => next(error));
 });
 
 const errorHandler = (error, request, response, next) => {

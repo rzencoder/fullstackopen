@@ -1,7 +1,7 @@
-GET http://localhost:3001/api/persons HTTP/1.1
+PUT http://localhost:3001/api/persons/5e8758761a0aba04ecfe159d HTTP/1.1
 content-type: application/json
 
 {
-    "name": "Arto Hellas",
-    "number": "12"
+    "name": "Shakira",
+    "number": "23"
 }
