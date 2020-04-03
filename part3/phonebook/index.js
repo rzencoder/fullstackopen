@@ -17,10 +17,12 @@ app.use(
 const Contact = require("./models/contact");
 
 app.get("/info", (req, res) => {
-  // const message = `
-  //   <p>Phonebook has info for ${persons.length} people</p>
-  //   <p>${new Date()}</p>`;
-  // res.send(message);
+  Contact.find({}).then(data => {
+    const message = `
+    <p>Phonebook has info for ${data.length} people</p>
+    <p>${new Date()}</p>`;
+    res.send(message);
+  });
 });
 
 app.get("/api/persons", (req, res) => {
@@ -42,7 +44,7 @@ app.get("/api/persons/:id", (req, res, next) => {
 });
 
 app.delete("/api/persons/:id", (req, res) => {
-  Contact.findByIdAndRemove(request.params.id)
+  Contact.findByIdAndRemove(req.params.id)
     .then(result => {
       response.status(204).end();
     })
