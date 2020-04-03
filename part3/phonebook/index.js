@@ -3,6 +3,7 @@ const app = express();
 const morgan = require("morgan");
 app.use(express.json());
 const cors = require("cors");
+require("dotenv").config();
 
 app.use(cors());
 app.use(express.static("build"));
@@ -12,6 +13,8 @@ morgan.token("body", function(req, res) {
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
+
+const Contact = require("./models/contact");
 
 let persons = [
   {
@@ -44,13 +47,20 @@ app.get("/info", (req, res) => {
 });
 
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Contact.find({}).then(contacts => {
+    res.json(contacts.map(contact => contact.toJSON()));
+  });
 });
 
 app.get("/api/persons/:id", (req, res) => {
   const id = Number(req.params.id);
-  const person = persons.find(psn => psn.id === id);
-  person ? res.json(person) : res.sendStatus(404).end();
+  Contact.find({ id: id })
+    .then(contact => {
+      return res.json(contact);
+    })
+    .catch(err => {
+      return res.sendStatus(404).end();
+    });
 });
 
 app.delete("/api/persons/:id", (req, res) => {
@@ -63,6 +73,11 @@ app.post("/api/persons", (req, res) => {
   const name = req.body.name;
   const number = req.body.number;
   const id = Math.floor(Math.random() * 1000000);
+  const contact = new Contact({
+    name: name,
+    number: number,
+    id: id
+  });
   if (persons.find(person => person.name === name)) {
     return res.status(400).json({ error: "Name already in phonebook" });
   }
@@ -72,8 +87,11 @@ app.post("/api/persons", (req, res) => {
   if (!name) {
     return res.status(400).json({ error: "Name must be given" });
   }
-  persons.push({ name, number, id });
-  res.json({ name, number, id });
+  contact.save().then(response => {
+    console.log("contact saved!");
+    res.json(response.toJSON());
+    mongoose.connection.close();
+  });
 });
 
 const PORT = process.env.PORT || 3001;
