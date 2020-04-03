@@ -41,9 +41,11 @@ app.get("/api/persons/:id", (req, res) => {
 });
 
 app.delete("/api/persons/:id", (req, res) => {
-  const id = Number(req.params.id);
-  // persons = persons.filter(psn => psn.id === id);
-  res.sendStatus(204).end();
+  Contact.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end();
+    })
+    .catch(error => res.sendStatus(204).end());
 });
 
 app.post("/api/persons", (req, res) => {
