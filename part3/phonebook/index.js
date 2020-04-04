@@ -87,8 +87,7 @@ app.put("/api/persons/:id", (req, res, next) => {
 });
 
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
-
+  console.error(error.name);
   if (error.name === "CastError" && error.kind === "ObjectId") {
     return response.status(400).send({ error: "malformatted id" });
   } else if (error.name === "ValidationError") {
