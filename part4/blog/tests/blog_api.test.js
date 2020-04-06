@@ -43,6 +43,20 @@ test("new blog is added to database when post request", async () => {
   expect(titles).toContain(newBlog.title);
 });
 
+test("likes property returns 0 if not added to post body", async () => {
+  const newBlog = {
+    title: "trains",
+    author: "Charlie",
+    url: "http://localhost:3003",
+  };
+
+  await api.post("/api/blogs").send(newBlog);
+
+  const response = await api.get("/api/blogs");
+  const blog = response.body.find((val) => val.title === newBlog.title);
+  expect(blog.likes).toBe(0);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
