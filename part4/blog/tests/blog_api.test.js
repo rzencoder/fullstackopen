@@ -23,6 +23,26 @@ test("unique identifier of each blog is called id", async () => {
   expect(blog.id).toBeDefined();
 });
 
+test("new blog is added to database when post request", async () => {
+  const newBlog = {
+    title: "planes",
+    author: "Megan",
+    url: "http://localhost:3002",
+    likes: 11,
+  };
+
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+
+  const response = await api.get("/api/blogs");
+  const titles = response.body.map((blog) => blog.title);
+  expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
+  expect(titles).toContain(newBlog.title);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
