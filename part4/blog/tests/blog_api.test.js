@@ -57,6 +57,15 @@ test("likes property returns 0 if not added to post body", async () => {
   expect(blog.likes).toBe(0);
 });
 
+test("return 400 error if title and url are missing", async () => {
+  const newBlog = {
+    author: "Lydia",
+    likes: 2,
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+});
+
 afterAll(() => {
   mongoose.connection.close();
 });
