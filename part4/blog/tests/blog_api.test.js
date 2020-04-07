@@ -82,6 +82,20 @@ describe("deletion of blog", () => {
 	});
 });
 
+describe("update of blog", () => {
+	test("updated blog is saved to the database", async () => {
+		const update = { likes: 20 };
+		const blogsBeforeUpdate = await api.get("/api/blogs");
+		const blogToUpdate = blogsBeforeUpdate.body[0];
+		await api.put(`/api/blogs/${blogToUpdate.id}`).send(update).expect(204);
+		const blogsAfterUpdate = await api.get("/api/blogs");
+		const updatedBlog = blogsAfterUpdate.body.filter(
+			(blog) => blog.id === blogToUpdate.id
+		);
+		expect(updatedBlog[0].likes).toBe(update.likes);
+	});
+});
+
 afterAll(() => {
 	mongoose.connection.close();
 });
