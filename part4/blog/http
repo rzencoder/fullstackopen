@@ -1,10 +1,4 @@
 
-POST http://localhost:3003/api/blogs/ HTTP/1.1
+DELETE http://localhost:3003/api/blogs/5e8f1bc170ed415324cf2c6e HTTP/1.1
 content-type: application/json
 Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJpbGwxMiIsImlkIjoiNWU4ZjBkMzJlZGRjZjEwNmZjNmQ1M2ZkIiwiaWF0IjoxNTg2NDM1NjQ5fQ.8-8Oi2NIUeUgD16bYWQD795NX814pSMqGD3zzC3KGZA
-
-{
-    "username": "planes",
-    "author": "bob",
-    "url": "123456"
-}
