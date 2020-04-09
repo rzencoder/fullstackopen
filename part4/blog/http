@@ -1,7 +1,10 @@
-POST http://localhost:3003/api/login HTTP/1.1
+
+POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
+Authorization: bearer eyJhbGciOJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJpbGwxMiIsImlkIjoiNWU4ZjBkMzJlZGRjZjEwNmZjNmQ1M2ZkIiwiaWF0IjoxNTg2NDM1NjQ5fQ.8-8Oi2NIUeUgD16bYWQD795NX814pSMqGD3zzC3KGZA
 
 {
-    "username": "billy12",
-    "password": "123456"
+    "username": "planes",
+    "author": "bob",
+    "url": "123456"
 }
