@@ -5,6 +5,19 @@ const api = supertest(app);
 const Blog = require("../models/blog");
 const helper = require("./test_helper");
 
+const testUsername = "testuser";
+const testPassword = "testpassword";
+let testToken;
+
+beforeAll(async () => {
+	testToken = await helper.getAuthToken(testUsername, testPassword);
+});
+
+const authApi = (request, token) => {
+	token = token || testToken;
+	return request.set("Authorization", "Bearer " + token);
+};
+
 beforeEach(async () => {
 	await Blog.deleteMany({});
 	const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog));
@@ -34,16 +47,28 @@ describe("adding a new blog", () => {
 			likes: 11,
 		};
 
-		await api
-			.post("/api/blogs")
+		await authApi(api.post("/api/blogs"))
 			.send(newBlog)
 			.expect(200)
 			.expect("Content-Type", /application\/json/);
-
 		const response = await api.get("/api/blogs");
 		const titles = response.body.map((blog) => blog.title);
 		expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
 		expect(titles).toContain(newBlog.title);
+	});
+
+	test("not permitted to add blog without valid token", async () => {
+		const newBlog = {
+			title: "planes",
+			author: "Megan",
+			url: "http://localhost:3002",
+			likes: 11,
+		};
+
+		await helper
+			.setInvalidToken(api.post("/api/blogs"))
+			.send(newBlog)
+			.expect(401);
 	});
 
 	test("likes property returns 0 if not added to post body", async () => {
@@ -53,7 +78,7 @@ describe("adding a new blog", () => {
 			url: "http://localhost:3003",
 		};
 
-		await api.post("/api/blogs").send(newBlog);
+		await authApi(api.post("/api/blogs")).send(newBlog);
 
 		const response = await api.get("/api/blogs");
 		const blog = response.body.find((val) => val.title === newBlog.title);
@@ -66,15 +91,22 @@ describe("adding a new blog", () => {
 			likes: 2,
 		};
 
-		await api.post("/api/blogs").send(newBlog).expect(400);
+		await authApi(api.post("/api/blogs")).send(newBlog).expect(400);
 	});
 });
 
 describe("deletion of blog", () => {
 	test("deleted blog is removed from database", async () => {
+		const newBlog = {
+			author: "Lydia",
+			title: "motorbikes",
+			likes: 2,
+			url: "http://localhost:3005",
+		};
+
+		const response = await authApi(api.post("/api/blogs")).send(newBlog);
 		const blogsBeforeDeletion = await api.get("/api/blogs");
-		const blogToDelete = blogsBeforeDeletion.body[0].id;
-		await api.delete(`/api/blogs/${blogToDelete}`).expect(204);
+		await authApi(api.delete(`/api/blogs/${response.body.id}`)).expect(204);
 		const blogsAfterDeletion = await api.get("/api/blogs");
 		expect(blogsBeforeDeletion.body.length).toBe(
 			blogsAfterDeletion.body.length + 1

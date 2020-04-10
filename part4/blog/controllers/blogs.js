@@ -12,9 +12,10 @@ blogsRouter.post("/", async (request, response) => {
 	if (!request.body.title && !request.body.url) {
 		return response.status(400).end();
 	}
-
-	const decodedToken = jwt.verify(token, process.env.SECRET);
-	if (!decodedToken.id) {
+	let decodedToken;
+	try {
+		decodedToken = jwt.verify(request.token, process.env.SECRET);
+	} catch (error) {
 		return response.status(401).json({ error: "token missing or invalid" });
 	}
 	const user = await User.findById(decodedToken.id);
