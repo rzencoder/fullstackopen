@@ -1,6 +1,11 @@
 import React, { useState } from "react";
-const Blog = ({ blog }) => {
+const Blog = ({ blog, updateLikes }) => {
   const [showAll, setShowAll] = useState(false);
+
+  const increaseLikes = () => {
+    const updatedBlog = { ...blog, likes: blog.likes + 1 };
+    updateLikes(updatedBlog, blog.id);
+  };
 
   const blogStyle = {
     paddingTop: 10,
@@ -23,7 +28,7 @@ const Blog = ({ blog }) => {
           <div>{blog.author}</div>
           <div style={{ display: "flex" }}>
             <div>{blog.likes}</div>
-            <button>Like</button>
+            <button onClick={increaseLikes}>Like</button>
           </div>
           <div>{blog.url}</div>
         </>

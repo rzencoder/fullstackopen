@@ -66,6 +66,18 @@ const App = () => {
     }
   };
 
+  const updateLikes = async (blog, id) => {
+    try {
+      const updatedBlog = await blogService.update(blog, id);
+      const newBlogs = [...blogs];
+      const index = newBlogs.findIndex((val) => val.id === blog.id);
+      newBlogs[index] = updatedBlog;
+      setBlogs(newBlogs);
+    } catch (error) {
+      renderMessage("error", "Unable to add like");
+    }
+  };
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -109,7 +121,7 @@ const App = () => {
       )}
       <h2>blogs</h2>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
       ))}
     </div>
   );
