@@ -10,9 +10,6 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [author, setAuthor] = useState("");
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
   const [message, setMessage] = useState(null);
 
   useEffect(() => {
@@ -28,6 +25,13 @@ const App = () => {
     }
   }, []);
 
+  const renderMessage = (status, content) => {
+    setMessage({ status, content });
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
+  };
+
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
@@ -41,44 +45,24 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (error) {
-      setMessage({ status: "error", content: "Wrong credentials" });
-      setTimeout(() => {
-        setMessage(null);
-      }, 3000);
+      renderMessage("error", "Wrong credentials");
     }
   };
 
   const handleLogout = () => {
     setUser(null);
     window.localStorage.removeItem("loggedBlogAppUser");
-    setMessage({ status: "ok", content: "Logout successful" });
-    setTimeout(() => {
-      setMessage(null);
-    }, 3000);
+    renderMessage("ok", "Logout successful");
   };
 
-  const handleAddBlog = async (event) => {
-    event.preventDefault();
+  const createBlog = async (blog) => {
     try {
-      const blog = await blogService.create({
-        author,
-        title,
-        url,
-      });
-      const newBlogs = blogs.concat(blog);
+      const newBlog = await blogService.create(blog);
+      const newBlogs = blogs.concat(newBlog);
       setBlogs(newBlogs);
-      setAuthor("");
-      setTitle("");
-      setUrl("");
-      setMessage({ status: "ok", content: "Blog added" });
-      setTimeout(() => {
-        setMessage(null);
-      }, 3000);
+      renderMessage("ok", "Blog added");
     } catch (error) {
-      setMessage({ status: "error", content: "Unable to add blog" });
-      setTimeout(() => {
-        setMessage(null);
-      }, 3000);
+      renderMessage("error", "Unable to add blog");
     }
   };
 
@@ -120,15 +104,7 @@ const App = () => {
       {user === null ? loginForm() : renderLogout()}
       {user && (
         <Togglable buttonLabel="Add Blog">
-          <AddBlog
-            url={url}
-            author={author}
-            title={title}
-            setAuthor={setAuthor}
-            setTitle={setTitle}
-            setUrl={setUrl}
-            handleAddBlog={handleAddBlog}
-          />
+          <AddBlog createBlog={createBlog} />
         </Togglable>
       )}
       <h2>blogs</h2>
