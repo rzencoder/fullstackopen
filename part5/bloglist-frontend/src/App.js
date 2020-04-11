@@ -11,6 +11,7 @@ const App = () => {
   const [author, setAuthor] = useState("");
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -20,6 +21,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
+      blogService.setToken(user.token);
       setUser(user);
     }
   }, []);
@@ -37,28 +39,44 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (error) {
-      console.log(error);
+      setMessage({ status: "error", content: "Wrong credentials" });
+      setTimeout(() => {
+        setMessage(null);
+      }, 3000);
     }
   };
 
   const handleLogout = () => {
     setUser(null);
     window.localStorage.removeItem("loggedBlogAppUser");
+    setMessage({ status: "ok", content: "Logout successful" });
+    setTimeout(() => {
+      setMessage(null);
+    }, 3000);
   };
 
   const handleNewBlog = async (event) => {
     event.preventDefault();
     try {
-      await blogService.create({
+      const blog = await blogService.create({
         author,
         title,
         url,
       });
+      const newBlogs = blogs.concat(blog);
+      setBlogs(newBlogs);
       setAuthor("");
       setTitle("");
       setUrl("");
+      setMessage({ status: "ok", content: "Blog added" });
+      setTimeout(() => {
+        setMessage(null);
+      }, 3000);
     } catch (error) {
-      console.log(error);
+      setMessage({ status: "error", content: "Unable to add blog" });
+      setTimeout(() => {
+        setMessage(null);
+      }, 3000);
     }
   };
 
@@ -132,6 +150,7 @@ const App = () => {
 
   return (
     <div>
+      {message && <div>{message.content}</div>}
       {user === null ? loginForm() : renderLogout()}
       {user && newBlogForm()}
       <h2>blogs</h2>
