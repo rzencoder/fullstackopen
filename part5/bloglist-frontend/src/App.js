@@ -110,6 +110,13 @@ const App = () => {
     </div>
   );
 
+  const renderBlogs = () => {
+    const sortedBlogs = [...blogs].sort((a, b) => a.likes < b.likes);
+    return sortedBlogs.map((blog) => (
+      <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
+    ));
+  };
+
   return (
     <div>
       {message && <div>{message.content}</div>}
@@ -120,9 +127,7 @@ const App = () => {
         </Togglable>
       )}
       <h2>blogs</h2>
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
-      ))}
+      {renderBlogs()}
     </div>
   );
 };
