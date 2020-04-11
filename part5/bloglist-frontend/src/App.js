@@ -78,6 +78,20 @@ const App = () => {
     }
   };
 
+  const handleDeleteBlog = async (id) => {
+    if (window.confirm("Are you sure you want to delete this blog?")) {
+      try {
+        await blogService.deleteBlog(id);
+        const newBlogs = [...blogs];
+        const index = newBlogs.findIndex((val) => val.id === id);
+        newBlogs.splice(index, 1);
+        setBlogs(newBlogs);
+      } catch (error) {
+        renderMessage("error", "Unable to add like");
+      }
+    }
+  };
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <div>
@@ -113,7 +127,13 @@ const App = () => {
   const renderBlogs = () => {
     const sortedBlogs = [...blogs].sort((a, b) => a.likes < b.likes);
     return sortedBlogs.map((blog) => (
-      <Blog key={blog.id} blog={blog} updateLikes={updateLikes} />
+      <Blog
+        key={blog.id}
+        blog={blog}
+        updateLikes={updateLikes}
+        user={user}
+        handleDeleteBlog={handleDeleteBlog}
+      />
     ));
   };
 
