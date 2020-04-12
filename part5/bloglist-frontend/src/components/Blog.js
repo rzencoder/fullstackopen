@@ -41,7 +41,9 @@ const Blog = ({ blog, updateLikes, user, handleDeleteBlog }) => {
         <>
           <div style={{ display: "flex" }}>
             <div className="blog_likes">{blog.likes}</div>
-            <button onClick={increaseLikes}>Like</button>
+            <button className="like_button" onClick={increaseLikes}>
+              Like
+            </button>
           </div>
           <div className="blog_url">{blog.url}</div>
           {renderDeleteButton()}
