@@ -29,7 +29,10 @@ const Blog = ({ blog, updateLikes, user, handleDeleteBlog }) => {
     <div style={blogStyle}>
       <div style={{ display: "flex" }}>
         <div className="blog_title">{blog.title}</div>
-        <button onClick={() => setShowAll(!showAll)}>
+        <button
+          className="show_all_button"
+          onClick={() => setShowAll(!showAll)}
+        >
           {showAll ? "Hide" : "Show"}
         </button>
       </div>
