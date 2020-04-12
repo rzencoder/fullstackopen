@@ -31,4 +31,20 @@ describe("Blog app", function () {
       cy.get(".error").should("have.css", "color", "rgb(255, 0, 0)");
     });
   });
+
+  describe.only("When logged in", function () {
+    beforeEach(function () {
+      cy.login({ username: "test1", password: "123" });
+    });
+
+    it("A blog can be created", function () {
+      cy.contains("Add Blog").click();
+      cy.get("#author").type("Joe");
+      cy.get("#title").type("Test Blog");
+      cy.get("#url").type("http://localhost:3001");
+      cy.contains("Submit Blog").click();
+      cy.contains("Blog added");
+      cy.contains("Test Blog");
+    });
+  });
 });
