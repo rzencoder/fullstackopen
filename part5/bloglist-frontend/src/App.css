@@ -36,3 +36,15 @@
     transform: rotate(360deg);
   }
 }
+
+.error {
+  border: 3px solid red;
+  color: red;
+  padding: 5px;
+}
+
+.ok {
+  border: 3px solid green;
+  color: green;
+  padding: 5px;
+}

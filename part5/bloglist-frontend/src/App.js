@@ -4,6 +4,7 @@ import Togglable from "./components/Togglable";
 import AddBlog from "./components/AddBlog";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import "./App.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -25,11 +26,13 @@ const App = () => {
     }
   }, []);
 
-  const renderMessage = (status, content) => {
+  const renderMessage = (status, content, timeout = true) => {
     setMessage({ status, content });
-    setTimeout(() => {
-      setMessage(null);
-    }, 3000);
+    if (timeout) {
+      setTimeout(() => {
+        setMessage(null);
+      }, 3000);
+    }
   };
 
   const handleLogin = async (event) => {
@@ -45,7 +48,7 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (error) {
-      renderMessage("error", "Wrong credentials");
+      renderMessage("error", "Wrong credentials", false);
     }
   };
 
@@ -98,6 +101,7 @@ const App = () => {
         username
         <input
           type="text"
+          id="loginUsername"
           value={username}
           name="Username"
           onChange={({ target }) => setUsername(target.value)}
@@ -108,6 +112,7 @@ const App = () => {
         <input
           type="password"
           value={password}
+          id="loginPassword"
           name="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
@@ -139,12 +144,15 @@ const App = () => {
 
   return (
     <div>
-      {message && <div>{message.content}</div>}
+      {message && <div className={message.status}>{message.content}</div>}
       {user === null ? loginForm() : renderLogout()}
       {user && (
-        <Togglable buttonLabel="Add Blog">
-          <AddBlog createBlog={createBlog} />
-        </Togglable>
+        <div>
+          <div>Logged in as {user.username}</div>
+          <Togglable buttonLabel="Add Blog">
+            <AddBlog createBlog={createBlog} />
+          </Togglable>
+        </div>
       )}
       <h2>blogs</h2>
       {renderBlogs()}
