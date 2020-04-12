@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, { useState } from 'react'
 
 const AddBlog = ({ createBlog }) => {
-  const [author, setAuthor] = useState("");
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
+  const [author, setAuthor] = useState('')
+  const [title, setTitle] = useState('')
+  const [url, setUrl] = useState('')
 
   const handleAddBlog = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     createBlog({
       author,
       title,
       url,
-    });
-    setAuthor("");
-    setTitle("");
-    setUrl("");
-  };
+    })
+    setAuthor('')
+    setTitle('')
+    setUrl('')
+  }
 
   return (
     <div>
@@ -51,7 +51,7 @@ const AddBlog = ({ createBlog }) => {
         <button type="submit">Submit Blog</button>
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default AddBlog;
+export default AddBlog
