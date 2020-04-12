@@ -46,5 +46,11 @@ describe("Blog app", function () {
       cy.contains("Blog added");
       cy.contains("Test Blog");
     });
+    it("A blog can be liked", function () {
+      cy.createBlog("Test Blog", "Joe", "http://localhost:3001");
+      cy.contains("Show").click();
+      cy.contains("Like").click();
+      cy.get("#blogLikes").should("contain", 1);
+    });
   });
 });

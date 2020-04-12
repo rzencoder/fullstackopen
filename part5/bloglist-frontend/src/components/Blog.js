@@ -40,7 +40,7 @@ const Blog = ({ blog, updateLikes, user, handleDeleteBlog }) => {
       {showAll && (
         <>
           <div style={{ display: "flex" }}>
-            <div className="blog_likes">{blog.likes}</div>
+            <div id="blogLikes">{blog.likes}</div>
             <button className="like_button" onClick={increaseLikes}>
               Like
             </button>
