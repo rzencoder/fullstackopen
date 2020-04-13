@@ -6,7 +6,6 @@ describe("Blog app", function () {
       username: "test1",
       password: "123",
     };
-    const blog = {};
     cy.request("POST", "http://localhost:3003/api/users/", user);
     cy.visit("http://localhost:3000");
   });
@@ -32,7 +31,7 @@ describe("Blog app", function () {
     });
   });
 
-  describe.only("When logged in", function () {
+  describe("When logged in", function () {
     beforeEach(function () {
       cy.login({ username: "test1", password: "123" });
     });
@@ -51,6 +50,30 @@ describe("Blog app", function () {
       cy.contains("Show").click();
       cy.contains("Like").click();
       cy.get("#blogLikes").should("contain", 1);
+    });
+
+    it("A blog can be deleted", function () {
+      cy.createBlog("Test Blog", "Joe", "http://localhost:3001");
+      cy.contains("Show").click();
+      cy.get("#blogLikes").should("exist");
+      cy.contains("Delete").click();
+      cy.get("#blogLikes").should("not.exist");
+    });
+
+    it.only("A blog cannot be deleted by a different user", function () {
+      const secondUser = {
+        username: "test2",
+        name: "Test2",
+        password: "123",
+      };
+
+      cy.createBlog("Test Blog", "Joe", "http://localhost:3001");
+      cy.contains("Logout").click();
+      cy.request("POST", "http://localhost:3003/api/users/", secondUser);
+      cy.login({ username: "test2", password: "123" });
+      cy.contains("Show").click();
+      cy.get("#blogLikes").should("exist");
+      cy.get("#deleteBlogButton").should("not.exist");
     });
   });
 });

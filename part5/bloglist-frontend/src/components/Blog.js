@@ -20,7 +20,9 @@ const Blog = ({ blog, updateLikes, user, handleDeleteBlog }) => {
   const renderDeleteButton = () => {
     return (
       user.username === blog.user.username && (
-        <button onClick={() => handleDeleteBlog(blog.id)}>Delete</button>
+        <button id="deleteBlogButton" onClick={() => handleDeleteBlog(blog.id)}>
+          Delete
+        </button>
       )
     );
   };
