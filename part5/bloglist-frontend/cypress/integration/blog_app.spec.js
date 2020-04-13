@@ -60,7 +60,7 @@ describe("Blog app", function () {
       cy.get("#blogLikes").should("not.exist");
     });
 
-    it.only("A blog cannot be deleted by a different user", function () {
+    it("A blog cannot be deleted by a different user", function () {
       const secondUser = {
         username: "test2",
         name: "Test2",
@@ -74,6 +74,18 @@ describe("Blog app", function () {
       cy.contains("Show").click();
       cy.get("#blogLikes").should("exist");
       cy.get("#deleteBlogButton").should("not.exist");
+    });
+
+    it.only("Blogs are ordered by amount of likes", function () {
+      cy.createBlog("Test Blog", "Joe", "http://localhost:3001", 4);
+      cy.createBlog("Test Blog2", "Jane", "http://localhost:3002", 8);
+      cy.createBlog("Test Blog3", "Jack", "http://localhost:3003", 6);
+      cy.get(".show_all_button").eq(0).click();
+      cy.get(".blog_container").eq(0).should("contain", 8);
+      cy.get(".show_all_button").eq(1).click();
+      cy.get(".blog_container").eq(1).should("contain", 6);
+      cy.get(".show_all_button").eq(2).click();
+      cy.get(".blog_container").eq(2).should("contain", 4);
     });
   });
 });

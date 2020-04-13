@@ -18,6 +18,7 @@ const Blog = ({ blog, updateLikes, user, handleDeleteBlog }) => {
   };
 
   const renderDeleteButton = () => {
+    if (!user) return;
     return (
       user.username === blog.user.username && (
         <button id="deleteBlogButton" onClick={() => handleDeleteBlog(blog.id)}>
@@ -28,7 +29,7 @@ const Blog = ({ blog, updateLikes, user, handleDeleteBlog }) => {
   };
 
   return (
-    <div style={blogStyle}>
+    <div className="blog_container" style={blogStyle}>
       <div style={{ display: "flex" }}>
         <div className="blog_title">{blog.title}</div>
         <button

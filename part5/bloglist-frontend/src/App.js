@@ -61,7 +61,7 @@ const App = () => {
   const createBlog = async (blog) => {
     try {
       const newBlog = await blogService.create(blog);
-      const newBlogs = blogs.concat(newBlog);
+      const newBlogs = [blogs, newBlog];
       setBlogs(newBlogs);
       renderMessage("ok", "Blog added");
     } catch (error) {
@@ -130,7 +130,7 @@ const App = () => {
   );
 
   const renderBlogs = () => {
-    const sortedBlogs = [...blogs].sort((a, b) => a.likes < b.likes);
+    const sortedBlogs = [...blogs].sort((a, b) => (a.likes < b.likes ? 1 : -1));
     return sortedBlogs.map((blog) => (
       <Blog
         key={blog.id}
