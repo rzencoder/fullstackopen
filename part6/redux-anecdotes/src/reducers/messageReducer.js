@@ -1,4 +1,6 @@
-const reducer = (state = "", action) => {
+const initialState = "";
+
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "SHOW_MESSAGE":
       return action.message;
@@ -10,7 +12,6 @@ const reducer = (state = "", action) => {
 };
 
 // Actions Creators
-
 export const showMessage = (message) => {
   return {
     type: "SHOW_MESSAGE",
