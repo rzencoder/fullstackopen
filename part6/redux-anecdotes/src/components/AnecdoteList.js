@@ -5,6 +5,7 @@ import { showMessage, removeMessage } from "../reducers/messageReducer";
 
 const AnecdoteList = () => {
   const anecdotes = useSelector((state) => state.anecdotes);
+  const filterString = useSelector((state) => state.filter);
   const dispatch = useDispatch();
 
   const vote = (id) => {
@@ -20,6 +21,7 @@ const AnecdoteList = () => {
   return (
     <div>
       {anecdotes
+        .filter((el) => el.content.toLowerCase().includes(filterString))
         .sort((a, b) => (a.votes < b.votes ? 1 : -1))
         .map((anecdote) => (
           <div key={anecdote.id}>
