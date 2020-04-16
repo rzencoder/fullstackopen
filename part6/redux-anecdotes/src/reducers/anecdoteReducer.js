@@ -41,10 +41,10 @@ const reducer = (state = [], action) => {
 };
 
 // Action Creators
-export const addVote = (id) => {
-  return {
-    type: "ADD_VOTE",
-    id,
+export const addVote = (anecdote) => {
+  return async (dispatch) => {
+    const data = await anecdoteService.addVote(anecdote);
+    dispatch({ type: "ADD_VOTE", id: data.id });
   };
 };
 
