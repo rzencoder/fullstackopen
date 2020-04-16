@@ -12,16 +12,12 @@ const reducer = (state = initialState, action) => {
 };
 
 // Actions Creators
-export const showMessage = (message) => {
-  return {
-    type: "SHOW_MESSAGE",
-    message,
-  };
-};
-
-export const removeMessage = () => {
-  return {
-    type: "REMOVE_MESSAGE",
+export const messageCreator = (message, delay) => {
+  return (dispatch) => {
+    dispatch({ type: "SHOW_MESSAGE", message });
+    setTimeout(() => {
+      dispatch({ type: "REMOVE_MESSAGE" });
+    }, delay);
   };
 };
 
