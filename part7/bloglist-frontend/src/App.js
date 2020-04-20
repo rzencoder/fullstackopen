@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { Switch, Route } from "react-router-dom";
 import "./App.css";
-
 import Blog from "./components/Blog";
 import Togglable from "./components/Togglable";
 import AddBlog from "./components/AddBlog";
-
 import blogService from "./services/blogs";
-
 import { messageCreator } from "./reducers/messageReducer";
 import { saveUser, loginUser, logoutUser } from "./reducers/userReducer";
 import {
@@ -16,6 +14,7 @@ import {
   addBlogLikes,
   deleteBlog,
 } from "./reducers/blogReducer";
+import Users from "./components/Users";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -123,7 +122,6 @@ const App = () => {
   );
 
   const renderBlogs = () => {
-    console.log(blogs);
     const sortedBlogs = [...blogs].sort((a, b) => (a.likes < b.likes ? 1 : -1));
     return sortedBlogs.map((blog) => (
       <Blog
@@ -137,18 +135,30 @@ const App = () => {
 
   return (
     <div>
+      <h2>Blogs</h2>
       {message && <div className={message.status}>{message.content}</div>}
-      {user === null ? loginForm() : renderLogout()}
-      {user && (
+
+      {user !== null ? (
         <div>
-          <div>Logged in as {user.username}</div>
-          <Togglable buttonLabel="Add Blog">
-            <AddBlog createBlog={createBlog} />
-          </Togglable>
+          <div>Logged in as {user.username}</div> <div>{renderLogout()}</div>
         </div>
+      ) : (
+        loginForm()
       )}
-      <h2>blogs</h2>
-      {renderBlogs()}
+
+      <Switch>
+        <Route path="/users">
+          <Users />
+        </Route>
+        <Route path="/">
+          {user && (
+            <Togglable buttonLabel="Add Blog">
+              <AddBlog createBlog={createBlog} />
+            </Togglable>
+          )}
+          {renderBlogs()}
+        </Route>
+      </Switch>
     </div>
   );
 };
