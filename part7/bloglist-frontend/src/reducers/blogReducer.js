@@ -3,7 +3,6 @@ import blogService from "../services/blogs";
 const initialState = [];
 
 const reducer = (state = initialState, action) => {
-  console.log(action);
   switch (action.type) {
     case "GET_BLOGS":
       return action.data;

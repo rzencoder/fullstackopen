@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
+import { useSelector } from "react-redux";
 
-const Blog = ({ blog, updateLikes, user, handleDeleteBlog }) => {
+const Blog = ({ blog, updateLikes, handleDeleteBlog }) => {
   const [showAll, setShowAll] = useState(false);
+  const user = useSelector((state) => state.user);
 
   const increaseLikes = () => {
     const updatedBlog = { ...blog, likes: blog.likes + 1 };
@@ -58,7 +60,6 @@ const Blog = ({ blog, updateLikes, user, handleDeleteBlog }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
   updateLikes: PropTypes.func.isRequired,
   handleDeleteBlog: PropTypes.func.isRequired,
 };

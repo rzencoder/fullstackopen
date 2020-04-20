@@ -7,9 +7,9 @@ import Togglable from "./components/Togglable";
 import AddBlog from "./components/AddBlog";
 
 import blogService from "./services/blogs";
-import loginService from "./services/login";
 
 import { messageCreator } from "./reducers/messageReducer";
+import { saveUser, loginUser, logoutUser } from "./reducers/userReducer";
 import {
   getBlogs,
   newBlog,
@@ -20,11 +20,11 @@ import {
 const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
 
   const dispatch = useDispatch();
   const message = useSelector((state) => state.message);
   const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getBlogs());
@@ -33,22 +33,21 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogAppUser");
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      blogService.setToken(user.token);
-      setUser(user);
+      const loggedUser = JSON.parse(loggedUserJSON);
+      blogService.setToken(loggedUser.token);
+      dispatch(saveUser(loggedUser));
     }
-  }, []);
+  }, [dispatch]);
 
   const handleLogin = async (event) => {
     event.preventDefault();
     try {
-      const user = await loginService.login({
-        username,
-        password,
-      });
-      window.localStorage.setItem("loggedBlogAppUser", JSON.stringify(user));
-      setUser(user);
-      blogService.setToken(user.token);
+      dispatch(
+        loginUser({
+          username,
+          password,
+        })
+      );
       setUsername("");
       setPassword("");
     } catch (error) {
@@ -57,7 +56,7 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    setUser(null);
+    dispatch(logoutUser());
     window.localStorage.removeItem("loggedBlogAppUser");
     dispatch(messageCreator("ok", "Logout successful"));
   };
@@ -124,13 +123,13 @@ const App = () => {
   );
 
   const renderBlogs = () => {
+    console.log(blogs);
     const sortedBlogs = [...blogs].sort((a, b) => (a.likes < b.likes ? 1 : -1));
     return sortedBlogs.map((blog) => (
       <Blog
         key={blog.id}
         blog={blog}
         updateLikes={updateLikes}
-        user={user}
         handleDeleteBlog={handleDeleteBlog}
       />
     ));
