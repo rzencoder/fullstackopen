@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 import "./App.css";
 import Blog from "./components/Blog";
 import Togglable from "./components/Togglable";
@@ -15,6 +15,7 @@ import {
   deleteBlog,
 } from "./reducers/blogReducer";
 import Users from "./components/Users";
+import User from "./components/User";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -24,6 +25,12 @@ const App = () => {
   const message = useSelector((state) => state.message);
   const blogs = useSelector((state) => state.blogs);
   const user = useSelector((state) => state.user);
+
+  const match = useRouteMatch("/users/:id");
+  const userMatch = match
+    ? blogs.filter((blog) => blog.user.id === match.params.id)
+    : null;
+  console.log(userMatch);
 
   useEffect(() => {
     dispatch(getBlogs());
@@ -147,6 +154,9 @@ const App = () => {
       )}
 
       <Switch>
+        <Route path="/users/:id">
+          {match && <User userBlogs={userMatch} />}
+        </Route>
         <Route path="/users">
           <Users />
         </Route>
