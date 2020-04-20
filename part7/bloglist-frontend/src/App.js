@@ -10,7 +10,12 @@ import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 import { messageCreator } from "./reducers/messageReducer";
-import { getBlogs, newBlog } from "./reducers/blogReducer";
+import {
+  getBlogs,
+  newBlog,
+  addBlogLikes,
+  deleteBlog,
+} from "./reducers/blogReducer";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -68,11 +73,7 @@ const App = () => {
 
   const updateLikes = async (blog, id) => {
     try {
-      const updatedBlog = await blogService.update(blog, id);
-      const newBlogs = [...blogs];
-      const index = newBlogs.findIndex((val) => val.id === blog.id);
-      newBlogs[index] = updatedBlog;
-      // setBlogs(newBlogs);
+      dispatch(addBlogLikes(blog, id));
     } catch (error) {
       dispatch(messageCreator("error", "Unable to add like"));
     }
@@ -81,11 +82,7 @@ const App = () => {
   const handleDeleteBlog = async (id) => {
     if (window.confirm("Are you sure you want to delete this blog?")) {
       try {
-        await blogService.deleteBlog(id);
-        const newBlogs = [...blogs];
-        const index = newBlogs.findIndex((val) => val.id === id);
-        newBlogs.splice(index, 1);
-        // setBlogs(newBlogs);
+        dispatch(deleteBlog(id));
       } catch (error) {
         dispatch(messageCreator("error", "Unable to add like"));
       }
