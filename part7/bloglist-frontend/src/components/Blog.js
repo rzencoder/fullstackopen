@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
 
 const Blog = ({ blog, updateLikes, handleDeleteBlog }) => {
-  const [showAll, setShowAll] = useState(false);
   const user = useSelector((state) => state.user);
 
   const increaseLikes = () => {
@@ -14,8 +13,6 @@ const Blog = ({ blog, updateLikes, handleDeleteBlog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
     marginBottom: 5,
   };
 
@@ -30,30 +27,23 @@ const Blog = ({ blog, updateLikes, handleDeleteBlog }) => {
     );
   };
 
+  if (!blog) return null;
   return (
     <div className="blog_container" style={blogStyle}>
       <div style={{ display: "flex" }}>
-        <div className="blog_title">{blog.title}</div>
-        <button
-          className="show_all_button"
-          onClick={() => setShowAll(!showAll)}
-        >
-          {showAll ? "Hide" : "Show"}
+        <h2 className="blog_title">
+          {blog.title} - {blog.author}
+        </h2>
+      </div>
+      <div className="blog_url">{blog.url}</div>
+      <div style={{ display: "flex" }}>
+        <div id="blogLikes">{blog.likes} likes</div>
+        <button className="like_button" onClick={increaseLikes}>
+          Like
         </button>
       </div>
-      <div className="blog_author">{blog.author}</div>
-      {showAll && (
-        <>
-          <div style={{ display: "flex" }}>
-            <div id="blogLikes">{blog.likes}</div>
-            <button className="like_button" onClick={increaseLikes}>
-              Like
-            </button>
-          </div>
-          <div className="blog_url">{blog.url}</div>
-          {renderDeleteButton()}
-        </>
-      )}
+      <div>Added by {blog.user.username}</div>
+      {renderDeleteButton()}
     </div>
   );
 };

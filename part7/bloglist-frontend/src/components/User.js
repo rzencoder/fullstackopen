@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const User = ({ userBlogs }) => {
   if (!userBlogs.length) return null;
@@ -9,7 +9,9 @@ const User = ({ userBlogs }) => {
       <h4>Added Blogs</h4>
       <ul>
         {userBlogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
+          <Link key={blog.id} to={`/blogs/${blog.id}`}>
+            <li>{blog.title}</li>
+          </Link>
         ))}
       </ul>
     </div>

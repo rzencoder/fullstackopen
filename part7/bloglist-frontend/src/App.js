@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { Switch, Route, useRouteMatch, Link } from "react-router-dom";
 import "./App.css";
 import Blog from "./components/Blog";
 import Togglable from "./components/Togglable";
@@ -26,11 +26,15 @@ const App = () => {
   const blogs = useSelector((state) => state.blogs);
   const user = useSelector((state) => state.user);
 
-  const match = useRouteMatch("/users/:id");
-  const userMatch = match
-    ? blogs.filter((blog) => blog.user.id === match.params.id)
+  const userMatch = useRouteMatch("/users/:id");
+  const userMatchArray = userMatch
+    ? blogs.filter((blog) => blog.user.id === userMatch.params.id)
     : null;
-  console.log(userMatch);
+
+  const blogMatch = useRouteMatch("/blogs/:id");
+  const blogMatchObject = blogMatch
+    ? blogs.find((blog) => blog.id === blogMatch.params.id)
+    : null;
 
   useEffect(() => {
     dispatch(getBlogs());
@@ -128,15 +132,20 @@ const App = () => {
     </div>
   );
 
+  const blogStyle = {
+    padding: "5px",
+    border: "solid 1px black",
+    margin: "2px 0",
+  };
+
   const renderBlogs = () => {
     const sortedBlogs = [...blogs].sort((a, b) => (a.likes < b.likes ? 1 : -1));
     return sortedBlogs.map((blog) => (
-      <Blog
-        key={blog.id}
-        blog={blog}
-        updateLikes={updateLikes}
-        handleDeleteBlog={handleDeleteBlog}
-      />
+      <Link to={`/blogs/${blog.id}`}>
+        <div style={blogStyle}>
+          {blog.title} - {blog.author}
+        </div>
+      </Link>
     ));
   };
 
@@ -154,8 +163,17 @@ const App = () => {
       )}
 
       <Switch>
+        <Route path="/blogs/:id">
+          {blogMatch && (
+            <Blog
+              blog={blogMatchObject}
+              updateLikes={updateLikes}
+              handleDeleteBlog={handleDeleteBlog}
+            />
+          )}
+        </Route>
         <Route path="/users/:id">
-          {match && <User userBlogs={userMatch} />}
+          {userMatch && <User userBlogs={userMatchArray} />}
         </Route>
         <Route path="/users">
           <Users />
