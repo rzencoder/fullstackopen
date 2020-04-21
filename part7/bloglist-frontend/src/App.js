@@ -124,24 +124,22 @@ const App = () => {
     </form>
   );
 
-  const renderLogout = () => (
-    <div>
-      <button name="Logout" onClick={handleLogout}>
-        Logout
-      </button>
-    </div>
-  );
-
   const blogStyle = {
     padding: "5px",
     border: "solid 1px black",
     margin: "2px 0",
   };
 
+  const navStyle = {
+    background: "#dddddd",
+    display: "flex",
+    padding: "5px",
+    marginBottom: "10px",
+  };
   const renderBlogs = () => {
     const sortedBlogs = [...blogs].sort((a, b) => (a.likes < b.likes ? 1 : -1));
     return sortedBlogs.map((blog) => (
-      <Link to={`/blogs/${blog.id}`}>
+      <Link key={blog.id} to={`/blogs/${blog.id}`}>
         <div style={blogStyle}>
           {blog.title} - {blog.author}
         </div>
@@ -151,17 +149,25 @@ const App = () => {
 
   return (
     <div>
+      <nav style={navStyle}>
+        <Link to="/">
+          <div>Blogs</div>
+        </Link>
+        <Link to="/users">
+          <div>Users</div>
+        </Link>
+        {user !== null && (
+          <>
+            <div>Logged in as {user.username}</div>
+            <button name="Logout" onClick={handleLogout}>
+              Logout
+            </button>
+          </>
+        )}
+      </nav>
       <h2>Blogs</h2>
       {message && <div className={message.status}>{message.content}</div>}
-
-      {user !== null ? (
-        <div>
-          <div>Logged in as {user.username}</div> <div>{renderLogout()}</div>
-        </div>
-      ) : (
-        loginForm()
-      )}
-
+      {!user && loginForm()}
       <Switch>
         <Route path="/blogs/:id">
           {blogMatch && (
