@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { addComment } from "../reducers/blogReducer";
 
 const Blog = ({ blog, updateLikes, handleDeleteBlog }) => {
   const user = useSelector((state) => state.user);
+  const [comment, setComment] = useState("");
+  const dispatch = useDispatch();
 
   const increaseLikes = () => {
     const updatedBlog = { ...blog, likes: blog.likes + 1 };
     updateLikes(updatedBlog, blog.id);
+  };
+
+  const handleCommentSubmit = (e) => {
+    e.preventDefault();
+    dispatch(addComment({ comment }, blog.id));
   };
 
   const blogStyle = {
@@ -44,13 +52,22 @@ const Blog = ({ blog, updateLikes, handleDeleteBlog }) => {
       </div>
       <div>Added by {blog.user.username}</div>
       {renderDeleteButton()}
-      <h3>Comments</h3>
+      <h2>Comments</h2>
       <ul>
-        {blog.comments.length &&
-          blog.comments.map((comment) => (
-            <li key={comment.id}>{comment.content}</li>
-          ))}
+        {blog.comments.map((comment) => (
+          <li key={comment.id}>{comment.content}</li>
+        ))}
       </ul>
+      <div>
+        <h4>Add Comment</h4>
+        <form onSubmit={handleCommentSubmit}>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+          ></textarea>
+          <button type="submit">Submit Comment</button>
+        </form>
+      </div>
     </div>
   );
 };

@@ -5,19 +5,27 @@ const User = require("../models/user");
 
 blogsRouter.get("/", async (request, response) => {
 	const blogs = await Blog.find({}).populate("user", { username: 1, name: 1 });
-	response.json(
-		blogs.map((blog) => {
-			blog.comments = [
-				{ content: "Great Article", id: 5678 },
-				{ content: "Interesting!", id: 5679 },
-			];
-			return blog.toJSON();
-		})
-	);
+	response.json(blogs.map((blog) => blog.toJSON()));
+});
+
+blogsRouter.post("/:id/comments", async (request, response) => {
+	if (!request.body.comment) {
+		return response.status(400).end();
+	}
+	const getId = () => Math.floor(Math.random() * 100000);
+	const comment = { content: request.body.comment, id: getId() };
+	const blog = await Blog.findById(request.params.id);
+	blog.comments.push(comment);
+	const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
+		new: true,
+	}).populate("user", {
+		username: 1,
+		name: 1,
+	});
+	response.json(updatedBlog.toJSON());
 });
 
 blogsRouter.post("/", async (request, response) => {
-	console.log(request.body);
 	if (!request.body.title && !request.body.url) {
 		return response.status(400).end();
 	}

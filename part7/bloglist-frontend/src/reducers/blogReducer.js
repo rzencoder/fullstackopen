@@ -12,6 +12,10 @@ const reducer = (state = initialState, action) => {
       return state.map((blog) =>
         blog.id === action.data.id ? (blog = action.data) : blog
       );
+    case "ADD_COMMENT":
+      return state.map((blog) =>
+        blog.id === action.data.id ? (blog = action.data) : blog
+      );
     case "DELETE_BLOG":
       return state.filter((blog) => blog.id !== action.id);
     default:
@@ -41,6 +45,16 @@ export const addBlogLikes = (blog, id) => {
     const data = await blogService.update(blog, id);
     dispatch({
       type: "ADD_LIKE",
+      data,
+    });
+  };
+};
+
+export const addComment = (comment, id) => {
+  return async (dispatch) => {
+    const data = await blogService.addComment(comment, id);
+    dispatch({
+      type: "ADD_COMMENT",
       data,
     });
   };
