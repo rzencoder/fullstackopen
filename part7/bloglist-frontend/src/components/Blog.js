@@ -44,6 +44,13 @@ const Blog = ({ blog, updateLikes, handleDeleteBlog }) => {
       </div>
       <div>Added by {blog.user.username}</div>
       {renderDeleteButton()}
+      <h3>Comments</h3>
+      <ul>
+        {blog.comments.length &&
+          blog.comments.map((comment) => (
+            <li key={comment.id}>{comment.content}</li>
+          ))}
+      </ul>
     </div>
   );
 };

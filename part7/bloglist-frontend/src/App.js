@@ -137,6 +137,7 @@ const App = () => {
     marginBottom: "10px",
   };
   const renderBlogs = () => {
+    console.log(blogs);
     const sortedBlogs = [...blogs].sort((a, b) => (a.likes < b.likes ? 1 : -1));
     return sortedBlogs.map((blog) => (
       <Link key={blog.id} to={`/blogs/${blog.id}`}>
