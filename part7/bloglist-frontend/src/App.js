@@ -16,6 +16,7 @@ import {
 } from "./reducers/blogReducer";
 import Users from "./components/Users";
 import User from "./components/User";
+import Container from "@material-ui/core/Container";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -148,7 +149,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <Container>
       <nav style={navStyle}>
         <Link to="/">
           <div>Blogs</div>
@@ -193,7 +194,7 @@ const App = () => {
           {renderBlogs()}
         </Route>
       </Switch>
-    </div>
+    </Container>
   );
 };
 
