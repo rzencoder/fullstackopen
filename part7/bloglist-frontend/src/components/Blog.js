@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { addComment } from "../reducers/blogReducer";
+import { TextField, Button } from "@material-ui/core";
 
 const Blog = ({ blog, updateLikes, handleDeleteBlog }) => {
   const user = useSelector((state) => state.user);
@@ -28,9 +29,9 @@ const Blog = ({ blog, updateLikes, handleDeleteBlog }) => {
     if (!user) return;
     return (
       user.username === blog.user.username && (
-        <button id="deleteBlogButton" onClick={() => handleDeleteBlog(blog.id)}>
+        <Button id="deleteBlogButton" onClick={() => handleDeleteBlog(blog.id)}>
           Delete
-        </button>
+        </Button>
       )
     );
   };
@@ -46,9 +47,9 @@ const Blog = ({ blog, updateLikes, handleDeleteBlog }) => {
       <div className="blog_url">{blog.url}</div>
       <div style={{ display: "flex" }}>
         <div id="blogLikes">{blog.likes} likes</div>
-        <button className="like_button" onClick={increaseLikes}>
+        <Button className="like_button" onClick={increaseLikes}>
           Like
-        </button>
+        </Button>
       </div>
       <div>Added by {blog.user.username}</div>
       {renderDeleteButton()}
@@ -65,7 +66,9 @@ const Blog = ({ blog, updateLikes, handleDeleteBlog }) => {
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           ></textarea>
-          <button type="submit">Submit Comment</button>
+          <div>
+            <Button type="submit">Submit Comment</Button>
+          </div>
         </form>
       </div>
     </div>

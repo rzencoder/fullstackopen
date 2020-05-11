@@ -16,7 +16,21 @@ import {
 } from "./reducers/blogReducer";
 import Users from "./components/Users";
 import User from "./components/User";
-import Container from "@material-ui/core/Container";
+import {
+  Container,
+  TextField,
+  Button,
+  AppBar,
+  Toolbar,
+  TableContainer,
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
+  Paper,
+  TableHead,
+} from "@material-ui/core";
+import { Alert } from "@material-ui/lab";
 
 const App = () => {
   const [username, setUsername] = useState("");
@@ -102,34 +116,30 @@ const App = () => {
   const loginForm = () => (
     <form id="loginForm" onSubmit={handleLogin}>
       <div>
-        username
-        <input
+        <TextField
           type="text"
           id="loginUsername"
+          label="Username"
           value={username}
           name="Username"
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
       <div>
-        password
-        <input
+        <TextField
           type="password"
           value={password}
           id="loginPassword"
           name="Password"
+          label="Password"
           onChange={({ target }) => setPassword(target.value)}
         />
+        <div>
+          <Button type="submit">Login</Button>
+        </div>
       </div>
-      <button type="submit">login</button>
     </form>
   );
-
-  const blogStyle = {
-    padding: "5px",
-    border: "solid 1px black",
-    margin: "2px 0",
-  };
 
   const navStyle = {
     background: "#dddddd",
@@ -140,35 +150,39 @@ const App = () => {
   const renderBlogs = () => {
     const sortedBlogs = [...blogs].sort((a, b) => (a.likes < b.likes ? 1 : -1));
     return sortedBlogs.map((blog) => (
-      <Link key={blog.id} to={`/blogs/${blog.id}`}>
-        <div style={blogStyle}>
-          {blog.title} - {blog.author}
-        </div>
-      </Link>
+      <TableRow key={blog.id}>
+        <TableCell>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+        </TableCell>
+        <TableCell>{blog.author}</TableCell>
+      </TableRow>
     ));
   };
 
   return (
     <Container>
-      <nav style={navStyle}>
-        <Link to="/">
-          <div>Blogs</div>
-        </Link>
-        <Link to="/users">
-          <div>Users</div>
-        </Link>
-        {user !== null && (
-          <>
-            <div>Logged in as {user.username}</div>
-            <button name="Logout" onClick={handleLogout}>
+      <AppBar style={navStyle} position="static">
+        <Toolbar>
+          <Button to="/" color="inherit" component={Link}>
+            <div>Blogs</div>
+          </Button>
+          <Button to="/users" color="inherit" component={Link}>
+            <div>Users</div>
+          </Button>
+          {user !== null && (
+            <Button name="Logout" onClick={handleLogout}>
               Logout
-            </button>
-          </>
-        )}
-      </nav>
-      <h2>Blogs</h2>
-      {message && <div className={message.status}>{message.content}</div>}
+            </Button>
+          )}
+        </Toolbar>
+      </AppBar>
+      {message.content.length ? (
+        <Alert className={message.status}>{message.content}</Alert>
+      ) : (
+        ""
+      )}
       {!user && loginForm()}
+
       <Switch>
         <Route path="/blogs/:id">
           {blogMatch && (
@@ -186,12 +200,23 @@ const App = () => {
           <Users />
         </Route>
         <Route path="/">
+          <h2>Blogs</h2>
           {user && (
             <Togglable buttonLabel="Add Blog">
               <AddBlog createBlog={createBlog} />
             </Togglable>
           )}
-          {renderBlogs()}
+          <TableContainer>
+            <Table component={Paper}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Title</TableCell>
+                  <TableCell>Author</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{renderBlogs()}</TableBody>
+            </Table>
+          </TableContainer>
         </Route>
       </Switch>
     </Container>
