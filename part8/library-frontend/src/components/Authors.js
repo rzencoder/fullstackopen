@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Select from "react-select";
 import { useMutation } from "@apollo/client";
 import { EDIT_AUTHOR, ALL_AUTHORS } from "../graphql/queries";
 
@@ -44,11 +45,13 @@ const Authors = (props) => {
         <h3>Set Birth Year</h3>
         <form onSubmit={handleSubmit}>
           <div>
-            <div>name</div>
-            <input
-              value={name}
-              onChange={({ target }) => setName(target.value)}
-            />
+            <Select
+              value={{ value: name, label: name }}
+              options={authors.map((a) => {
+                return { value: a.name, label: a.name };
+              })}
+              onChange={(selected) => setName(selected.label)}
+            ></Select>
           </div>
           <div>
             <div>born</div>
