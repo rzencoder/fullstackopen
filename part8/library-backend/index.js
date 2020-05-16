@@ -1,5 +1,20 @@
 const { ApolloServer, gql } = require("apollo-server");
 const { v1: uuid } = require("uuid");
+const mongoose = require("mongoose");
+const Author = require("./models/Author");
+const Book = require("./models/Book");
+require("dotenv").config();
+
+mongoose.set("useFindAndModify", false);
+console.log("connecting to", process.env.MONGODB_URI);
+mongoose
+  .connect(process.env.MONGODB_URI, { useNewUrlParser: true })
+  .then(() => {
+    console.log("connected to MongoDB");
+  })
+  .catch((error) => {
+    console.log("error connection to MongoDB:", error.message);
+  });
 
 let authors = [
   {
@@ -83,9 +98,9 @@ const typeDefs = gql`
   type Book {
     title: String!
     published: Int!
-    author: String!
-    id: String!
+    author: Author!
     genres: [String!]!
+    id: ID!
   }
   type Author {
     name: String!
@@ -153,17 +168,23 @@ const resolvers = {
     },
   },
   Mutation: {
-    addBook: (root, args) => {
-      const book = { ...args, id: uuid() };
-      books = books.concat(book);
-      const authorSearch = authors.filter(
-        (author) => author.name === args.author
-      );
-      if (authorSearch.length === 0) {
-        const author = { name: args.author, id: uuid() };
-        authors = authors.concat(author);
+    addBook: async (root, args) => {
+      const author = await Author.findOne({ name: args.author });
+      if (author) {
+        const book = await new Book({ ...args, author }).save();
+        return { ...book, author };
+      } else {
+        const newAuthor = await new Author({
+          name: args.author,
+          born: null,
+        }).save();
+        const book = await new Book({
+          ...args,
+          author: { ...newAuthor },
+        }).save();
+        console.log(newAuthor);
+        return { ...book.toObject(), author: { ...newAuthor.toObject() } };
       }
-      return book;
     },
 
     editAuthor: (root, args) => {

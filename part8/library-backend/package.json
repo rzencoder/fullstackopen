@@ -4,13 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.13.1",
+    "dotenv": "^8.2.0",
     "graphql": "^15.0.0",
+    "mongoose": "^5.9.14",
+    "mongoose-unique-validator": "^2.0.3",
     "uuid": "^8.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
   }
 }
