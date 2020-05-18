@@ -75,12 +75,15 @@ const resolvers = {
     authorCount: async () => await Author.countDocuments(),
     allAuthors: async () => await Author.find({}),
     allBooks: async (root, args) => {
-      let filter = {};
+      const filter = {};
       if (args.genre) {
         filter.genres = { $in: [args.genre] };
       }
+      if (args.author) {
+        filter.author = args.author;
+      }
       try {
-        return await Book.find({ ...filter });
+        return await Book.find({ ...filter }).populate("author");
       } catch (error) {
         throw new UserInputError(error.message, {
           invalidArgs: args,

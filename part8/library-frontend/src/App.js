@@ -26,9 +26,7 @@ const App = () => {
         authors={authorsResult.data.allAuthors}
         show={page === "authors"}
       />
-
       <Books books={booksResult.data.allBooks} show={page === "books"} />
-
       <NewBook show={page === "add"} />
     </div>
   );
