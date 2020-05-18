@@ -105,7 +105,7 @@ const resolvers = {
       if (!currentUser) {
         throw new AuthenticationError("not authenticated");
       }
-
+      console.log(args);
       try {
         const author = await Author.findOne({ name: args.author });
         if (author) {
