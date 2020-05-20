@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useLazyQuery } from "@apollo/client";
+import { RECOMMENDED_BOOKS } from "../graphql/queries";
 
 const Recommendations = ({ user, show, books }) => {
+  const [getFavBooks, favBooksResult] = useLazyQuery(RECOMMENDED_BOOKS);
+
+  useEffect(() => {
+    getFavBooks({ variables: { genre: "drama" } });
+  }, [user]);
+
   if (!show) {
     return null;
   }
 
   const booksList = () => {
-    const filter = (book) => book.genres.includes(user.favoriteGenre);
-    let filteredBooks = books.filter(filter);
-    return filteredBooks.map((a) => (
+    return favBooksResult.data.allBooks.map((a) => (
       <tr key={a.title}>
         <td>{a.title}</td>
         <td>{a.author.name}</td>
@@ -28,7 +34,7 @@ const Recommendations = ({ user, show, books }) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {booksList()}
+          {favBooksResult.data && booksList()}
         </tbody>
       </table>
     </div>

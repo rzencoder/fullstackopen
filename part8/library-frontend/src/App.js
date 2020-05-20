@@ -15,16 +15,16 @@ const App = () => {
   const userResult = useQuery(USER);
   const client = useApolloClient();
 
-  if (authorsResult.loading || booksResult.loading) {
-    return <div>loading...</div>;
-  }
-
   const logout = () => {
     setToken(null);
     localStorage.clear();
     client.resetStore();
     setPage("authors");
   };
+
+  if (authorsResult.loading || booksResult.loading) {
+    return <div>loading...</div>;
+  }
 
   return (
     <div>
@@ -50,7 +50,7 @@ const App = () => {
       />
       <Books books={booksResult.data.allBooks} show={page === "books"} />
       <NewBook show={page === "add"} />
-      {userResult && (
+      {userResult.data && (
         <Recommendations
           show={page === "recommendations"}
           user={userResult.data.me}
