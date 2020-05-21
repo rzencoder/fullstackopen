@@ -6,7 +6,7 @@ const Recommendations = ({ user, show, books }) => {
   const [getFavBooks, favBooksResult] = useLazyQuery(RECOMMENDED_BOOKS);
 
   useEffect(() => {
-    getFavBooks({ variables: { genre: "drama" } });
+    getFavBooks({ variables: { genre: user.favoriteGenre } });
   }, [user]);
 
   if (!show) {
