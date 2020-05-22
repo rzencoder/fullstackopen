@@ -35,15 +35,33 @@ const App = () => {
     client.resetStore();
   };
 
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => {
+      return set.map((p) => p.id).includes(object.id);
+    };
+    const dataInStore = client.readQuery({ query: ALL_BOOKS });
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      dataInStore.allBooks.push(addedBook);
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: dataInStore,
+      });
+    }
+  };
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
-      window.alert(subscriptionData.data.bookAdded.title + " Added");
+      const addedBook = subscriptionData.data.bookAdded;
+      window.alert(addedBook.title + " Added");
+      updateCacheWith(addedBook);
     },
   });
 
   if (authorsResult.loading || booksResult.loading) {
     return <div>loading...</div>;
   }
+
+  console.log(authorsResult);
 
   return (
     <div>

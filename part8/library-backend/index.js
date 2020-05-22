@@ -37,6 +37,7 @@ const typeDefs = gql`
     id: String!
     born: Int
     bookCount: Int
+    books: [Book!]!
   }
 
   type User {
@@ -79,7 +80,7 @@ const resolvers = {
   Query: {
     bookCount: async () => await Book.countDocuments(),
     authorCount: async () => await Author.countDocuments(),
-    allAuthors: async () => await Author.find({}),
+    allAuthors: async () => Author.find({}).populate("books"),
     allBooks: async (root, args) => {
       const filter = {};
       if (args.genre) {
@@ -101,9 +102,7 @@ const resolvers = {
     },
   },
   Author: {
-    bookCount: async (root) => {
-      return await Book.find({ author: root.name }).length;
-    },
+    bookCount: async (root) => await root.books.length,
   },
   Mutation: {
     addBook: async (root, args, context) => {
@@ -111,11 +110,13 @@ const resolvers = {
       if (!currentUser) {
         throw new AuthenticationError("not authenticated");
       }
-      console.log(args);
       try {
         const author = await Author.findOne({ name: args.author });
         if (author) {
-          const book = await new Book({ ...args, author }).save();
+          const book = await new Book({ ...args, author });
+          await author.update({ $push: { books: book } });
+          book.save();
+          pubsub.publish("BOOK_ADDED", { bookAdded: book });
           return { ...book, author };
         } else {
           const newAuthor = await new Author({
@@ -126,6 +127,7 @@ const resolvers = {
             ...args,
             author: { ...newAuthor },
           }).save();
+          await newAuthor.update({ $push: { books: book } });
           pubsub.publish("BOOK_ADDED", { bookAdded: book });
           return { ...book.toObject(), author: { ...newAuthor.toObject() } };
         }

@@ -25,8 +25,6 @@ const NewBook = (props) => {
     ],
   });
 
-  console.log(props.user);
-
   if (!props.show) {
     return null;
   }
@@ -34,7 +32,6 @@ const NewBook = (props) => {
   const submit = async (event) => {
     event.preventDefault();
     createBook({ variables: { title, author, published, genres } });
-    console.log("add book...");
 
     setTitle("");
     setPublished("");
