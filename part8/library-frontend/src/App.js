@@ -61,8 +61,6 @@ const App = () => {
     return <div>loading...</div>;
   }
 
-  console.log(authorsResult);
-
   return (
     <div>
       <div>
