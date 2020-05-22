@@ -85,3 +85,11 @@ export const RECOMMENDED_BOOKS = gql`
     }
   }
 `;
+
+export const BOOK_ADDED = gql`
+  subscription {
+    bookAdded {
+      title
+    }
+  }
+`;

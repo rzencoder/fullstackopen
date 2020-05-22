@@ -4,8 +4,8 @@ import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import Recommendations from "./components/Recommendations";
 import LoginForm from "./components/LoginForm";
-import { useQuery, useApolloClient } from "@apollo/client";
-import { ALL_AUTHORS, ALL_BOOKS, USER } from "./graphql/queries";
+import { useQuery, useApolloClient, useSubscription } from "@apollo/client";
+import { ALL_AUTHORS, ALL_BOOKS, USER, BOOK_ADDED } from "./graphql/queries";
 
 const App = () => {
   const [token, setToken] = useState(null);
@@ -34,6 +34,12 @@ const App = () => {
     localStorage.clear();
     client.resetStore();
   };
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      window.alert(subscriptionData.data.bookAdded.title + " Added");
+    },
+  });
 
   if (authorsResult.loading || booksResult.loading) {
     return <div>loading...</div>;
