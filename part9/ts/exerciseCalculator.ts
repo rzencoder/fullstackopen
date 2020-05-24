@@ -8,33 +8,33 @@ interface ExerciseMetrics {
   ratingDescription: string;
 }
 
-interface ExerciseValues {
-  target: number;
-  hours: Array<number>;
-}
+// interface ExerciseValues {
+//   target: number;
+//   hours: Array<number>;
+// }
 
-const parseArgument = (args: Array<string>): ExerciseValues => {
-  if (args.length < 4) throw new Error("Not enough arguments");
-  const startArgs = args.splice(0, 3);
-  const hours: Array<number> = [];
-  args.forEach((arg) => {
-    if (!isNaN(Number(arg))) {
-      hours.push(Number(arg));
-    } else {
-      throw new Error("Provided values were not numbers!");
-    }
-  });
-  if (!isNaN(Number(startArgs[2]))) {
-    return {
-      target: Number(startArgs[2]),
-      hours,
-    };
-  } else {
-    throw new Error("Provided values were not numbers!");
-  }
-};
+// const parseArgument = (args: Array<string>): ExerciseValues => {
+//   if (args.length < 4) throw new Error("Not enough arguments");
+//   const startArgs = args.splice(0, 3);
+//   const hours: Array<number> = [];
+//   args.forEach((arg) => {
+//     if (!isNaN(Number(arg))) {
+//       hours.push(Number(arg));
+//     } else {
+//       throw new Error("Provided values were not numbers!");
+//     }
+//   });
+//   if (!isNaN(Number(startArgs[2]))) {
+//     return {
+//       target: Number(startArgs[2]),
+//       hours,
+//     };
+//   } else {
+//     throw new Error("Provided values were not numbers!");
+//   }
+// };
 
-const calculateExercises = (
+export const calculateExercises = (
   target: number,
   hours: Array<number>
 ): ExerciseMetrics => {
@@ -67,10 +67,9 @@ const calculateExercises = (
   };
 };
 
-try {
-  const { target, hours } = parseArgument(process.argv);
-  console.log(calculateExercises(target, hours));
-} catch (e) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  console.log("Error, something bad happened, message: ", e.message);
-}
+// try {
+//   const { target, hours } = parseArgument(process.argv);
+//   console.log(calculateExercises(target, hours));
+// } catch (e) {
+//   console.log("Error, something bad happened, message: ", e.message);
+// }
