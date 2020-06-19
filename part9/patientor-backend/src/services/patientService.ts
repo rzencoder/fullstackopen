@@ -4,7 +4,7 @@ import patients from '../data/patients';
 const getEntries = (): Array<Patient> => { return patients; };
 
 const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
-    return patients.map(({ id, name, dateOfBirth, gender, occupation }) => ({ id, name, dateOfBirth, gender, occupation }));
+    return patients.map(({ id, name, dateOfBirth, gender, occupation, entries }) => ({ id, name, dateOfBirth, gender, occupation, entries }));
 };
 
 const addPatient = (entry: NewPatientEntry): Patient => {
@@ -17,7 +17,7 @@ const addPatient = (entry: NewPatientEntry): Patient => {
     return newPatientEntry;
 };
 
-const getPatient = (id: string): PublicPatient => {
+const getPatient = (id: string): PublicPatient | undefined => {
     return patients.find((patient: Patient) => patient.id === id);
 };
 
