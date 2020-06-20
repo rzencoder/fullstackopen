@@ -4,12 +4,12 @@ import { Header, Icon, SemanticICONS } from 'semantic-ui-react';
 import { useParams } from 'react-router-dom';
 import { Patient, Entry } from '../types';
 import { apiBaseUrl } from '../constants';
-import { useStateValue } from '../state';
+import EntryDetails from './EntryDetails';
+import './index.css';
 
 const PatientPage: React.FC = () => {
     const { id } = useParams();
     const [patient, setPatient] = useState<Patient | undefined>();
-    const [{ diagnoses }, ,] = useStateValue();
 
     const fetchPatient = async (id: string | undefined) => {
         const { data } = await axios.get<Patient>(
@@ -47,20 +47,7 @@ const PatientPage: React.FC = () => {
                     <p>Occupation: {patient.occupation}</p>
                     <h3>Entries</h3>
                     {patient.entries.map((entry: Entry) => (
-                        <p key={entry.id}>{entry.description}
-                            <ul>
-                                {entry.diagnosisCodes
-                                    ? entry.diagnosisCodes.map((code) => {
-                                        const diagnosis = diagnoses.get(code);
-                                        return (
-                                            <li key={code}>
-                                                {code} {diagnosis?.name}
-                                            </li>
-                                        );
-                                    })
-                                    : null}
-                            </ul>
-                        </p>
+                        <EntryDetails key={entry.id} entry={entry} />
                     ))}
                 </>
             )}
