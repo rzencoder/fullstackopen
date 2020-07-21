@@ -1,9 +1,16 @@
-import { PatientEntry, Gender } from './types';
+import { Patient, Gender } from './types';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 const isString = (text: any): text is string => {
     return typeof text === 'string' || text instanceof String;
+};
+
+const parseString = (string: any, name: string): string => {
+    if (!string || !isString(string)) {
+        throw new Error(`Incorrect or missing ${name}: ${string}`);
+    }
+    return string;
 };
 
 const parseName = (name: any): string => {
@@ -49,8 +56,8 @@ const parseGender = (gender: any): Gender => {
     return gender;
 };
 
-const toNewPatientEntry = (object: any): PatientEntry => {
-    const newEntry: PatientEntry = {
+export const toNewPatientEntry = (object: any): Patient => {
+    const newEntry: Patient = {
         name: parseName(object.name),
         dateOfBirth: parseDate(object.dateOfBirth),
         ssn: parseSsn(object.ssn),
@@ -61,4 +68,35 @@ const toNewPatientEntry = (object: any): PatientEntry => {
     return newEntry;
 };
 
-export default toNewPatientEntry;
+export const checkEntry = (object: any) => {
+    parseDate(object.date);
+    parseString(object.description, "description");
+    parseString(object.specialist, "specialist");
+
+    switch (object.type) {
+        case "Hospital":
+            if (object.discharge === undefined) throw new Error("Discharge missing");
+            parseDate(object.discharge.date);
+            parseString(object.discharge.criteria, "criteria");
+            break;
+        case "OccupationalHealthcare":
+            parseString(object.employerName, "employer name");
+            if (object.sickLeave) {
+                parseDate(object.sickLeave.startDate);
+                parseDate(object.sickLeave.endDate);
+            }
+            break;
+        case "HealthCheckEntry":
+            if (
+                isNaN(object.healthCheckRating) ||
+                object.healthCheckRating < 0 ||
+                object.healthCheckRating > 3
+            )
+                throw new Error(
+                    "Missing health rating " + object.healthCheckRating
+                );
+            break;
+        default:
+            throw new Error("Unknown type " + object.type);
+    }
+};

@@ -23,4 +23,13 @@ router.post('/', (req, res) => {
     }
 });
 
+router.post("/:id/entries", (req, res) => {
+    console.log('ok')
+    try {
+        res.send(patientService.addEntry(req.params.id, req.body));
+    } catch (e) {
+        res.status(500).send({ error: e.message });
+    }
+});
+
 export default router;
