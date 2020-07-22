@@ -18,6 +18,7 @@ const addPatient = (entry: NewPatientEntry): Patient => {
     };
 
     patients.push(newPatientEntry);
+    console.log(newPatientEntry);
     return newPatientEntry;
 };
 
@@ -26,6 +27,7 @@ const getPatient = (id: string): PublicPatient | undefined => {
 };
 
 const addEntry = (patientId: string, entry: NewPatientEntry) => {
+    console.log(entry);
     checkEntry(entry);
     const myEntry = {
         id: Math.floor(Math.random() * 10000).toString(),
@@ -34,7 +36,6 @@ const addEntry = (patientId: string, entry: NewPatientEntry) => {
     const patient = patients.find((p) => p.id == patientId);
     if (patient === undefined) throw new Error("Patient not found");
     patient.entries.push(myEntry);
-    console.log(patient.entries)
     return myEntry;
 };
 
