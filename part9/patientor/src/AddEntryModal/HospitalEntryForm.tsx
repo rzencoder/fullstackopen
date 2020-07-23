@@ -6,14 +6,14 @@ import { Grid, Button } from 'semantic-ui-react';
 import { Field, Formik, Form } from 'formik';
 
 
-export type EntryFormValues = Omit<HospitalEntry, 'id'>;
+export type HospitalEntryFormValues = Omit<HospitalEntry, 'id'>;
 
 interface Props {
-    onSubmit: (values: EntryFormValues) => void;
+    onSubmit: (values: HospitalEntryFormValues) => void;
     onCancel: () => void;
 }
 
-const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
+const HospitalEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
     const [{ diagnoses }] = useStateValue();
 
     return (
@@ -97,19 +97,18 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                         />
                         <Grid>
                             <Grid.Column floated="left" width={5}>
-                                <Button type="button" onClick={onCancel} color="red">
-                                    Cancel
-                </Button>
-                            </Grid.Column>
-                            <Grid.Column floated="right" width={5}>
                                 <Button
                                     type="submit"
-                                    floated="right"
                                     color="blue"
                                     disabled={!dirty || !isValid}
                                 >
                                     Add
-                </Button>
+                                </Button>
+                            </Grid.Column>
+                            <Grid.Column floated="right" width={5}>
+                                <Button type="button" onClick={onCancel} color="red">
+                                    Cancel
+                                </Button>
                             </Grid.Column>
                         </Grid>
                     </Form>
@@ -119,4 +118,4 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
     );
 };
 
-export default AddEntryForm;
+export default HospitalEntryForm;

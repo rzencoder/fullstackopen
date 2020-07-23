@@ -6,8 +6,7 @@ import { Patient, Entry } from '../types';
 import { apiBaseUrl } from '../constants';
 import EntryDetails from './EntryDetails';
 import { addEntry, useStateValue, setPatient } from '../state';
-import AddEntryModal from '../AddEntryModal';
-import { EntryFormValues } from '../AddEntryModal/AddEntryForm';
+import AddEntryModal, { EntryFormValues } from '../AddEntryModal';
 import './index.css';
 
 const PatientPage: React.FC = () => {
