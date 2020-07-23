@@ -1,7 +1,7 @@
 import React from 'react';
 import { DiagnosisSelection, TextField } from '../AddPatientModal/FormField';
 import { useStateValue } from '../state';
-import { HospitalEntry } from '../types';
+import { HospitalEntry, Discharge } from '../types';
 import { Grid, Button } from 'semantic-ui-react';
 import { Field, Formik, Form } from 'formik';
 
@@ -30,8 +30,31 @@ const AddEntryForm: React.FC<Props> = ({ onSubmit, onCancel }) => {
                 diagnosisCodes: [],
             }}
             onSubmit={onSubmit}
-            validate={values => {
-                /// ...
+            validate={(values) => {
+                const errors: { [field: string]: string | Discharge } = {};
+                const requiredError = 'Required Field';
+                if (!values.description) {
+                    errors.description = requiredError;
+                }
+                if (!values.date) {
+                    errors.date = requiredError;
+                }
+                if (!values.discharge.date) {
+                    errors.discharge = {
+                        criteria: '',
+                        date: requiredError,
+                    };
+                }
+                if (!values.discharge.criteria) {
+                    errors.discharge = {
+                        date: '',
+                        criteria: requiredError,
+                    };
+                }
+                if (!values.specialist) {
+                    errors.specialist = requiredError;
+                }
+                return errors;
             }}
         >
             {({ isValid, dirty, setFieldValue, setFieldTouched }) => {

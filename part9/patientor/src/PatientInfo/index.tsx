@@ -89,7 +89,7 @@ const PatientPage: React.FC = () => {
                 error={error}
 
             />
-            <Button onClick={() => openModalHandler()}>Add New Entry</Button>
+            <Button color="blue" onClick={() => openModalHandler()}>Add New Entry</Button>
         </div>
     );
 };
