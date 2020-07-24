@@ -5,13 +5,17 @@ import HospitalEntryForm, {
 import HealthCheckEntryForm, {
     HealthCheckEntryFormValues,
 } from './HealthCheckEntryForm';
+import OccupationalEntryForm, {
+    OccupationalEntryFormValues,
+} from './OccupationalEntryForm';
 import { EntryType } from '../types';
 import { Modal, Segment, Dropdown } from 'semantic-ui-react';
 
 
 export type EntryFormValues =
     HospitalEntryFormValues
-    | HealthCheckEntryFormValues;
+    | HealthCheckEntryFormValues |
+    OccupationalEntryFormValues;
 
 interface Props {
     modalOpen: boolean;
@@ -37,7 +41,11 @@ const entryOptions: EntryOption[] = [
         text: EntryType.HealthCheck,
         value: EntryType.HealthCheck,
     },
-
+    {
+        key: 2,
+        text: EntryType.OccupationalHealthcare,
+        value: EntryType.OccupationalHealthcare,
+    },
 ];
 
 const AddEntryModal = ({ modalOpen, modalClose, onSubmit, error }: Props) => {
@@ -62,6 +70,14 @@ const AddEntryModal = ({ modalOpen, modalClose, onSubmit, error }: Props) => {
                     onCancel={modalClose}
                     onSubmit={onSubmit}
                 ></HealthCheckEntryForm>
+            );
+        }
+        if (entry === EntryType.OccupationalHealthcare) {
+            return (
+                <OccupationalEntryForm
+                    onCancel={modalClose}
+                    onSubmit={onSubmit}
+                ></OccupationalEntryForm>
             );
         }
     };
